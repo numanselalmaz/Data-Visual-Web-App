@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sütun Seçimi</title>
+</head>
+<body>
+    <h1>Sütun Seçimi</h1>
+    <form action="/visualize" method="post">
+        <input type="hidden" name="filename" value="{{ filename }}">
+        <label for="selected_column">Görselleştirilecek Sütun:</label>
+        <select name="selected_column" id="selected_column">
+            {% for column in columns %}
+                <option value="{{ column }}">{{ column }}</option>
+            {% endfor %}
+        </select>
+        <label for="numeric">Numerik sütun mu?</label>
+        <input type="checkbox" id="numeric" name="numeric" value="1">
+        <input type="submit" value="Görselleştir" name="submit">
+    </form>
+</body>
+</html>
