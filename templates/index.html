@@ -1,15 +1,16 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV Dosyası Yükle</title>
+    <title>Upload CSV</title>
 </head>
 <body>
-    <h1>CSV Dosyası Yükle</h1>
+    <h2>Upload CSV File</h2>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file"> <!-- Dosya yükleme alanı eklendi -->
-        <input type="submit" value="Dosyayı Yükle" name="submit">
+        <input type="file" name="file" accept=".csv">
+        <input type="submit" value="Upload">
     </form>
 </body>
 </html>

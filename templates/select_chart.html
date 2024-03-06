@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>Select Column</h2>
-    <form action="/visualize" method="post">
+    <form action="/plot" method="post">
         <input type="hidden" name="filename" value="{{ filename }}">
         <select name="selected_column">
             {% for column in columns %}

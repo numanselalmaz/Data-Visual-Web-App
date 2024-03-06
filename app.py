@@ -1,4 +1,5 @@
 import os
+import random
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -29,19 +30,15 @@ def upload():
         return "Dosya Seçilmedi!"
     
     if file and allowed_file(file.filename):
-        # Dosyayı güvenli bir şekilde kaydet
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         
-        # CSV dosyasını oku ve sütun isimlerini al
         df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         columns = df.columns.tolist()
 
-        # Görselleştirmek için sütunları içeren bir form göster
         return render_template('select_column.html', columns=columns, filename=filename)
     else:
         return "Yalnızca CSV dosyaları kabul edilmektedir!"
-
 
 @app.route('/visualize', methods=['POST'])
 def visualize():
@@ -50,22 +47,46 @@ def visualize():
     df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     try:
-        # Seçilen sütunu histogram olarak göster
-        plt.hist(df[selected_column])
-        plt.title(f"{selected_column} Histogramı")
-        plt.xlabel(selected_column)
-        plt.ylabel("Frekans")
-        histogram_filename = f"{selected_column}_histogram.png"
-        plt.savefig(os.path.join(app.config['STATIC_FOLDER'], histogram_filename))
-        plt.close()
-        return render_template('histograms.html', histogram=histogram_filename)
+        # Histogram veya trend grafiği oluştur
+        if pd.api.types.is_numeric_dtype(df[selected_column]):
+            # Sayısal veriler için histogram
+            plt.figure(figsize=(10, 6))
+            plt.hist(df[selected_column], color=random.choice(['red', 'blue', 'green', 'yellow', 'orange', 'purple']), edgecolor='black', alpha=0.7)
+            plt.title(f"{selected_column} Histogramı")
+            plt.xlabel(selected_column)
+            plt.ylabel("Frekans")
+            histogram_filename = f"{selected_column}_histogram.png"
+            plt.savefig(os.path.join(app.config['STATIC_FOLDER'], histogram_filename))
+            plt.close()
+            
+            return render_template('histograms.html', histogram=histogram_filename)
+        elif pd.api.types.is_datetime64_any_dtype(df[selected_column]):
+            # Zaman verileri için trend grafiği
+            df[selected_column] = pd.to_datetime(df[selected_column])
+            df.set_index(selected_column, inplace=True)
+            
+            plt.figure(figsize=(10, 6))
+            df[selected_column].plot(color=random.choice(['red', 'blue', 'green', 'yellow', 'orange', 'purple']))
+            plt.title(f"{selected_column} Trend Grafiği")
+            plt.xlabel("Tarih")
+            plt.ylabel(selected_column)
+            trend_filename = f"{selected_column}_trend.png"
+            plt.savefig(os.path.join(app.config['STATIC_FOLDER'], trend_filename))
+            plt.close()
+            
+            return render_template('trend.html', trend=trend_filename)
+        else:
+            return f"{selected_column} sütunu sayısal veya tarih verileri içermemektedir!"
     except KeyError:
         return f"{selected_column} sütunu mevcut değil!"
-
 
 @app.route('/histograms')
 def histograms():
     return render_template('histograms.html')
+
+@app.route('/trend')
+def trend():
+    return render_template('trend.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
