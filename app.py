@@ -2,8 +2,10 @@ import os
 import random
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from flask import Flask, render_template, request
+from scipy import stats
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -35,8 +37,13 @@ def upload():
         
         df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         columns = df.columns.tolist()
-
-        return render_template('select_column.html', columns=columns, filename=filename)
+        
+        # İstatistiksel özet hesaplama
+        stats_summary = df.describe().loc[['mean', 'std', 'min', '25%', '50%', '75%', 'max']]
+        stats_summary = stats_summary.rename(index={'50%': 'median', '25%': 'Q1', '75%': 'Q3'})
+        stats_summary = stats_summary.rename(index=lambda x: x.capitalize())
+        
+        return render_template('select_column.html', columns=columns, filename=filename, stats=stats_summary.to_dict())
     else:
         return "Yalnızca CSV dosyaları kabul edilmektedir!"
 
@@ -47,19 +54,33 @@ def visualize():
     df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     try:
+        # Eksik değer kontrolü
+        missing_values = df[selected_column].isnull().sum()
+        missing_info = f"{selected_column} sütununda {missing_values} eksik değer bulunmaktadır." if missing_values > 0 else f"{selected_column} sütununda eksik değer bulunmamaktadır."
+
+        # İstatistiksel özet hesaplama
+        stats_summary = df[selected_column].describe().loc[['mean', 'std', 'min', '25%', '50%', '75%', 'max']]
+        stats_summary = stats_summary.rename(index={'50%': 'median', '25%': 'Q1', '75%': 'Q3'})
+        stats_summary = stats_summary.rename(index=lambda x: x.capitalize())
+
         # Histogram veya trend grafiği oluştur
         if pd.api.types.is_numeric_dtype(df[selected_column]):
             # Sayısal veriler için histogram
             plt.figure(figsize=(10, 6))
-            plt.hist(df[selected_column], color=random.choice(['red', 'blue', 'green', 'yellow', 'orange', 'purple']), edgecolor='black', alpha=0.7)
+            n, bins, patches = plt.hist(df[selected_column], color=random.choice(['red', 'blue', 'green', 'yellow', 'orange', 'purple']), edgecolor='black', alpha=0.7, density=True)
+            
+            # Normalleştirilmiş histogramı kullanarak bir çizgi çiz
+            bin_centers = 0.5 * (bins[:-1] + bins[1:])
+            plt.plot(bin_centers, n, '-o', color='black')
+            
             plt.title(f"{selected_column} Histogramı")
             plt.xlabel(selected_column)
-            plt.ylabel("Frekans")
+            plt.ylabel("Yoğunluk")
             histogram_filename = f"{selected_column}_histogram.png"
             plt.savefig(os.path.join(app.config['STATIC_FOLDER'], histogram_filename))
             plt.close()
             
-            return render_template('histograms.html', histogram=histogram_filename)
+            return render_template('histograms.html', histogram=histogram_filename, stats=stats_summary.to_dict(), missing_info=missing_info)
         elif pd.api.types.is_datetime64_any_dtype(df[selected_column]):
             # Zaman verileri için trend grafiği
             df[selected_column] = pd.to_datetime(df[selected_column])
@@ -74,7 +95,7 @@ def visualize():
             plt.savefig(os.path.join(app.config['STATIC_FOLDER'], trend_filename))
             plt.close()
             
-            return render_template('trend.html', trend=trend_filename)
+            return render_template('trend.html', trend=trend_filename, stats=stats_summary.to_dict(), missing_info=missing_info)
         else:
             return f"{selected_column} sütunu sayısal veya tarih verileri içermemektedir!"
     except KeyError:
