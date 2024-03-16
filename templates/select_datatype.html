@@ -1,22 +1,20 @@
-<!-- select_column.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Column</title>
+    <title>Select Data Type</title>
 </head>
 <body>
-    <h2>Select Column</h2>
-    <form action="/select_graph_type" method="post">
-        <input type="hidden" name="filename" value="{{ filename }}">
-        <label for="selected_column">Select a column:</label>
+    <h1>Select Data Type</h1>
+    <form action="/select_column/{{ datatype }}" method="post">
+        <label for="selected_column">Select Column:</label>
         <select name="selected_column" id="selected_column">
             {% for column in columns %}
                 <option value="{{ column }}">{{ column }}</option>
             {% endfor %}
         </select>
+        <input type="hidden" name="filename" value="{{ filename }}">
         <button type="submit">Next</button>
     </form>
 </body>

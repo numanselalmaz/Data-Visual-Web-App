@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histograms</title>
+    <title>{{ graph_type.capitalize() }}</title>
 </head>
 <body>
-    <h2>Histogram</h2>
-    <img src="{{ url_for('static', filename=histogram) }}" alt="Histogram">
+    <h2>{{ graph_type.capitalize() }}</h2>
+    <img src="{{ url_for('static', filename=histogram) }}" alt="{{ graph_type.capitalize() }}">
 
     <h2>Statistical Summary</h2>
     <table border="1">

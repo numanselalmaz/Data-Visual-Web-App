@@ -1,0 +1,29 @@
+<!-- select_graph_type.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Graph Type</title>
+</head>
+<body>
+    <h2>Select Graph Type for {{ selected_column }}</h2>
+    <form action="/visualize" method="post">
+        <input type="hidden" name="filename" value="{{ filename }}">
+        <input type="hidden" name="selected_column" value="{{ selected_column }}">
+        <label for="graph_type">Select graph type:</label>
+        <select name="graph_type" id="graph_type">
+            {% if is_numeric %}
+                <option value="histogram">Histogram</option>
+                <option value="boxplot">Box Plot</option>
+                <option value="scatter">Scatter Plot</option>
+            {% else %}
+                <option value="bar">Bar Chart</option>
+                <option value="pie">Pie Chart</option>
+            {% endif %}
+        </select>
+        <button type="submit">Visualize</button>
+    </form>
+</body>
+</html>
