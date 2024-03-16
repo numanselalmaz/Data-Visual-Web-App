@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorical Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ selected_column }} için {{ graph_type }} Grafiği</h1>
+        <img src="{{ url_for('static', filename=chart) }}" alt="Categorical Chart">
+
+        <h2>İstatistiksel Özetler:</h2>
+        <ul>
+            <li>Ortalama: {{ stats['Mean'] }}</li>
+            <li>Medyan: {{ stats['Median'] }}</li>
+            <li>Standart Sapma: {{ stats['Standard Deviation'] }}</li>
+            <li>Minimum: {{ stats['Minimum'] }}</li>
+            <li>Maksimum: {{ stats['Maximum'] }}</li>
+            <li>Eksik Değerler: {{ stats['Missing Values'] }}</li>
+            <li>Toplam Değerler: {{ stats['Total Values'] }}</li>
+            <li>Eksik Değer Yüzdesi: {{ stats['Missing Percentage'] }}%</li>
+        </ul>
+
+        <p>{{ missing_info }}</p>
+    </div>
+</body>
+</html>

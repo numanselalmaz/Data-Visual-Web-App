@@ -4,30 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ graph_type.capitalize() }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            max-width: 600px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th:first-child, td:first-child {
+            font-weight: bold;
+        }
+
+        p {
+            margin-top: 0;
+        }
+    </style>
 </head>
 <body>
-    <h2>{{ graph_type.capitalize() }}</h2>
-    <img src="{{ url_for('static', filename=histogram) }}" alt="{{ graph_type.capitalize() }}">
+    <div class="container">
+        <h2>{{ graph_type.capitalize() }}</h2>
+        <img src="{{ url_for('static', filename=histogram) }}" alt="{{ graph_type.capitalize() }}">
 
-    <h2>Statistical Summary</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Statistical Measure</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for key, value in stats.items() %}
-            <tr>
-                <td>{{ key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <h2>Statistical Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Statistical Measure</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in stats.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <h2>Missing Values</h2>
-    <p>{{ missing_info }}</p>
+        <h2>Missing Values</h2>
+        <p>{{ missing_info }}</p>
+    </div>
 </body>
 </html>

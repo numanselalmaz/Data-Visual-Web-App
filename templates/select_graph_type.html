@@ -1,29 +1,78 @@
-<!-- select_graph_type.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Graph Type</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h2>Select Graph Type for {{ selected_column }}</h2>
-    <form action="/visualize" method="post">
-        <input type="hidden" name="filename" value="{{ filename }}">
-        <input type="hidden" name="selected_column" value="{{ selected_column }}">
-        <label for="graph_type">Select graph type:</label>
-        <select name="graph_type" id="graph_type">
-            {% if is_numeric %}
-                <option value="histogram">Histogram</option>
-                <option value="boxplot">Box Plot</option>
-                <option value="scatter">Scatter Plot</option>
-            {% else %}
-                <option value="bar">Bar Chart</option>
-                <option value="pie">Pie Chart</option>
-            {% endif %}
-        </select>
-        <button type="submit">Visualize</button>
-    </form>
+    <div class="container">
+        <h2>Select Graph Type for {{ selected_column }}</h2>
+        <form action="/visualize" method="post">
+            <input type="hidden" name="filename" value="{{ filename }}">
+            <input type="hidden" name="selected_column" value="{{ selected_column }}">
+            <label for="graph_type">Select graph type:</label>
+            <select name="graph_type" id="graph_type">
+                {% if is_numeric %}
+                    <option value="histogram">Histogram</option>
+                    <option value="boxplot">Box Plot</option>
+                    <option value="scatter">Scatter Plot</option>
+                {% else %}
+                    <option value="bar">Bar Chart</option>
+                    <option value="pie">Pie Chart</option>
+                {% endif %}
+            </select>
+            <button type="submit">Visualize</button>
+        </form>
+    </div>
 </body>
 </html>
