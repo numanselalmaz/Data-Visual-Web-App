@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ graph_type.capitalize() }}</title>
+    <title>{{ selected_column.capitalize() }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,6 +85,16 @@
 
         <h2>Missing Values</h2>
         <p>{{ missing_info }}</p>
+
+        {% if is_numeric %}
+        <h2>Outliers (Z-Score)</h2>
+        <p>Count: {{ stats[selected_column + " Outliers (Z-Score)"]["Count"] }}</p>
+        <p>Values: {{ stats[selected_column + " Outliers (Z-Score)"]["Values"] }}</p>
+
+        <h2>Outliers (IQR)</h2>
+        <p>Count: {{ stats[selected_column + " Outliers (IQR)"]["Count"] }}</p>
+        <p>Values: {{ stats[selected_column + " Outliers (IQR)"]["Values"] }}</p>
+        {% endif %}
     </div>
 </body>
 </html>

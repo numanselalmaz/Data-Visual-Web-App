@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Graph Type</title>
+    <title>Grafik Türünü Belirleme</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,11 +56,11 @@
 </head>
 <body>
     <div class="container">
-        <h2>Select Graph Type for {{ selected_column }}</h2>
+        <h2>{{ selected_column }} Sütunu İçin İstenilen Grafik Türünü Seçiniz</h2>
         <form action="/visualize" method="post">
             <input type="hidden" name="filename" value="{{ filename }}">
             <input type="hidden" name="selected_column" value="{{ selected_column }}">
-            <label for="graph_type">Select graph type:</label>
+            <label for="graph_type"></label>
             <select name="graph_type" id="graph_type">
                 {% if is_numeric %}
                     <option value="histogram">Histogram</option>
@@ -71,7 +71,7 @@
                     <option value="pie">Pie Chart</option>
                 {% endif %}
             </select>
-            <button type="submit">Visualize</button>
+            <button type="submit">Analiz Et</button>
         </form>
     </div>
 </body>

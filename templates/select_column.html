@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Column</title>
+    <title>Sütun Belirleme</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,16 +56,16 @@
 </head>
 <body>
     <div class="container">
-        <h2>Select Column</h2>
+        <h2>Sütun Seçiniz</h2>
         <form action="/select_graph_type" method="post">
             <input type="hidden" name="filename" value="{{ filename }}">
-            <label for="selected_column">Select a column:</label>
+            <label for="selected_column"></label>
             <select name="selected_column" id="selected_column">
                 {% for column in columns %}
                     <option value="{{ column }}">{{ column }}</option>
                 {% endfor %}
             </select>
-            <button type="submit">Next</button>
+            <button type="submit">Devam Et</button>
         </form>
     </div>
 </body>

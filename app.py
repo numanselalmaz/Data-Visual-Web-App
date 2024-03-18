@@ -1,5 +1,3 @@
-# app.py
-
 import os
 import random
 
@@ -18,22 +16,64 @@ app.config['STATIC_FOLDER'] = STATIC_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'csv'
 
-def calculate_stats(df):
+def detect_outliers_z_score(data):
+    threshold = 3
+    outliers = []
+    mean = np.mean(data)
+    std = np.std(data)
+    for i in data:
+        z_score = (i - mean) / std
+        if np.abs(z_score) > threshold:
+            outliers.append(i)
+    return outliers
+
+def detect_outliers_iqr(data):
+    q1 = np.percentile(data, 25)
+    q3 = np.percentile(data, 75)
+    iqr = q3 - q1
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+    outliers = [x for x in data if x < lower_bound or x > upper_bound]
+    return outliers
+
+def calculate_stats(column):
     stats = {
-        'Mean': df.mean(),
-        'Median': df.median(),
-        'Standard Deviation': df.std(),
-        'Minimum': df.min(),
-        'Maximum': df.max(),
-        'Missing Values': df.isnull().sum(),  # Eksik değerlerin sayısını hesapla
-        'Total Values': df.shape[0]  # Toplam değerlerin sayısını hesapla
+        'Mean': column.mean(),
+        'Median': column.median(),
+        'Standard Deviation': column.std(),
+        'Minimum': column.min(),
+        'Maximum': column.max(),
+        'Missing Values': column.isnull().sum(),
+        'Total Values': column.shape[0]
     }
-    stats['Missing Percentage'] = (stats['Missing Values'] / stats['Total Values']) * 100  # Eksik değerlerin yüzdesini hesapla
+    stats['Missing Percentage'] = (stats['Missing Values'] / stats['Total Values']) * 100
+    
+    # Aykırı değerleri hesapla
+    outliers_z_score = detect_outliers_z_score(column.dropna())
+    outliers_iqr = detect_outliers_iqr(column.dropna())
+    stats['Outliers (Z-Score)'] = {
+        'Count': len(outliers_z_score),
+        'Values': outliers_z_score
+    }
+    stats['Outliers (IQR)'] = {
+        'Count': len(outliers_iqr),
+        'Values': outliers_iqr
+    }
+    stats['Outliers Percentage (Z-Score)'] = (len(outliers_z_score) / stats['Total Values']) * 100
+    stats['Outliers Percentage (IQR)'] = (len(outliers_iqr) / stats['Total Values']) * 100
+    
     return stats
+
+
+
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('home.html')
+
+@app.route('/upload', methods=['GET'])
+def upload_form():
+    return render_template('csv_import.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -55,6 +95,10 @@ def upload():
         return render_template('select_column.html', columns=columns, filename=filename)
     else:
         return "Yalnızca CSV dosyaları kabul edilmektedir!"
+
+@app.route('/data-manipulation')
+def data_manipulation():
+    return render_template('data_manipulation.html')
 
 @app.route('/select_graph_type', methods=['POST'])
 def select_graph_type():
@@ -169,6 +213,21 @@ def visualize():
                 return f"{selected_column} sütunu kategorik değil!"
     except KeyError:
         return f"{selected_column} sütunu mevcut değil!"
+    
+@app.route('/numeric_data_cleaning')
+def numeric_data_cleaning():
+    ####
+    return render_template('numeric_data_cleaning.html')
+
+@app.route('/categorical_data_cleaning')
+def categorical_data_cleaning():
+    ####
+    return render_template('categorical_data_cleaning.html')
+
+@app.route('/categorical_data_conversion')
+def categorical_data_conversion():
+    ####
+    return render_template('categorical_data_conversion.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
