@@ -1,0 +1,53 @@
+name: app
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
+      - name: Build app
+        run: pip install build
+
+      - name: Package app
+        run: python setup.py sdist bdist_wheel
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ secrets.DOCKER_REPOSITORY }}
+          tag: latest
+
+**Değişiklikler:**
+
+* **Pull request'ler için tetikleyici eklendi:** Artık bir pull request gönderildiğinde de iş akışı tetiklenecek ve uygulamanızın test edilmiş ve paketlenmiş bir sürümünü oluşturacaktır.
+* **Docker image oluşturma ve Docker Hub'a itme için yeni bir iş eklendi:** Bu iş akışı, uygulamanız için bir Docker image oluşturacak ve Docker Hub'a itecektir.
+
+**Güncellenmiş kodun faydaları:**
+
+* Pull request'leri otomatik olarak test ederek kod kalitesini ve güvenilirliğini artırır.
+* Docker image oluşturarak uygulamanızın taşınabilirliğini ve dağıtılabilirliğini artırır.
+* Docker Hub'a otomatik olarak itme yaparak uygulamanızın güncellemelerini kolaylaştırır.
