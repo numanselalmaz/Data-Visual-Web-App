@@ -41,13 +41,9 @@ jobs:
           repository: ${{ secrets.DOCKER_REPOSITORY }}
           tag: latest
 
-**Değişiklikler:**
 
 * **Pull request'ler için tetikleyici eklendi:** Artık bir pull request gönderildiğinde de iş akışı tetiklenecek ve uygulamanızın test edilmiş ve paketlenmiş bir sürümünü oluşturacaktır.
 * **Docker image oluşturma ve Docker Hub'a itme için yeni bir iş eklendi:** Bu iş akışı, uygulamanız için bir Docker image oluşturacak ve Docker Hub'a itecektir.
-
-**Güncellenmiş kodun faydaları:**
-
 * Pull request'leri otomatik olarak test ederek kod kalitesini ve güvenilirliğini artırır.
 * Docker image oluşturarak uygulamanızın taşınabilirliğini ve dağıtılabilirliğini artırır.
 * Docker Hub'a otomatik olarak itme yaparak uygulamanızın güncellemelerini kolaylaştırır.
