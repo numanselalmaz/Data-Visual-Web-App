@@ -58,12 +58,36 @@
         p {
             margin-top: 0;
         }
+
+        .download-button {
+            text-decoration: none;
+        }
+
+        .download-button button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-button button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>{{ graph_type.capitalize() }}</h2>
         <img src="{{ url_for('static', filename=histogram) }}" alt="{{ graph_type.capitalize() }}">
+        <div>
+        <a href="{{ url_for('static', filename=histogram) }}" download="{{ selected_column }}.png" class="download-button">
+            <button>İndir</button>
+        </a>
+        </div>
 
         <h2>Statistical Summary</h2>
         <table>
@@ -95,6 +119,8 @@
         <p>Count: {{ stats[selected_column + " Outliers (IQR)"]["Count"] }}</p>
         <p>Values: {{ stats[selected_column + " Outliers (IQR)"]["Values"] }}</p>
         {% endif %}
+
+
     </div>
 </body>
 </html>

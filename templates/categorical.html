@@ -39,12 +39,36 @@
         p {
             margin-top: 0;
         }
+
+        .download-button {
+            text-decoration: none;
+        }
+
+        .download-button button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-button button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>{{ selected_column }} için {{ graph_type }} Grafiği</h1>
         <img src="{{ url_for('static', filename=chart) }}" alt="Categorical Chart">
+        <div class="download-button">
+            <a href="{{ url_for('static', filename=chart) }}" download="{{ selected_column }}_graph.png">
+                <button>İndir</button>
+            </a>
+        </div>
 
         <h2>İstatistiksel Özetler:</h2>
         <ul>
